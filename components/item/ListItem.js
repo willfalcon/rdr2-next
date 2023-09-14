@@ -2,6 +2,7 @@
 import { useSelector } from 'react-redux';
 import ItemDetails from './ItemDetails';
 import classNames from 'classnames';
+import CompletedModal from './CompletedModal';
 
 const btnClass = statusCode => {
   switch (statusCode) {
@@ -18,23 +19,32 @@ const btnClass = statusCode => {
 export default function ListItem(item) {
   const status = useSelector(state => state.status.find(i => i.id === item._id));
   const hideCompleted = useSelector(state => state.settings.hideCompleted);
+  const holding = useSelector(state => state.holding) || [];
 
+  const materials = item.materials.map(({ material, quantity }) => {
+    const holdingCount = holding.find(i => i.id === material._id)?.count || 0;
+
+    return { material, quantity, holding: holdingCount };
+  });
   return (
-    <div
-      className={classNames('collapse collapse-arrow border-b grid grid-cols-[1fr_auto] overflow-visible rounded-none', {
-        hidden: hideCompleted && status?.status === 3,
-      })}
-    >
-      <input type="checkbox" />
+    <>
+      <div
+        className={classNames('collapse collapse-arrow border-b grid grid-cols-[1fr_auto] overflow-visible rounded-none', {
+          hidden: hideCompleted && status?.status === 3,
+        })}
+      >
+        <input type="checkbox" />
 
-      <h2 className={classNames('collapse-title text-lg font-medium p-0')}>
-        <div className={classNames('w-full p-4', btnClass(status?.status))}>
-          <span className="">{item.name}</span>
+        <h2 className={classNames('collapse-title text-lg font-medium p-0')}>
+          <div className={classNames('w-full p-4', btnClass(status?.status))}>
+            <span className="">{item.name}</span>
+          </div>
+        </h2>
+        <div className="collapse-content">
+          <ItemDetails item={item} status={status} materials={materials} />
         </div>
-      </h2>
-      <div className="collapse-content">
-        <ItemDetails item={item} />
       </div>
-    </div>
+      <CompletedModal materials={materials} vendor={item.vendor} item={item._id} />
+    </>
   );
 }

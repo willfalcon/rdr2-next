@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 export const statusSlice = createSlice({
   name: 'status',
@@ -24,3 +24,6 @@ export const statusSlice = createSlice({
 
 export default statusSlice.reducer;
 export const { changeStatus, replaceStatusState } = statusSlice.actions;
+
+const statusSelector = state => state.status;
+export const trackingSelector = createSelector([statusSelector], status => status.filter(item => item.status === 2).map(item => item.id));

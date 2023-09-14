@@ -10,11 +10,11 @@ export async function POST(request) {
 
     try {
       const updated = await authClient.patch(user.user._id).set({ store }).commit();
-      return NextResponse.json({ message: 'success', user: updated });
+      return NextResponse.json({ message: 'success', user: updated }, { status: 200 });
     } catch (err) {
-      return NextResponse.json({ message: 'something went wrong', error: err });
+      return NextResponse.json({ message: 'something went wrong', error: err }, { status: 400 });
     }
   }
 
-  return NextResponse.json({ message: 'you must be logged in' });
+  return NextResponse.json({ message: 'you must be logged in' }, { status: 401 });
 }

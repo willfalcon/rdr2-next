@@ -1,13 +1,17 @@
+'use client';
 import ListItem from '@/components/item/ListItem';
 import { getTrackedItems } from '@/lib/fetching';
 import { alphabetical } from '@/lib/utils';
+import { trackingSelector } from '@/reducers/statusSlice';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function ItemsList() {
-  const tracking = useSelector(state => state.status.filter(item => item.status === 2).map(item => item.id));
+  const tracking = useSelector(trackingSelector);
+
   // console.log(tracking);
   const [items, setItems] = useState([]);
+
   useEffect(() => {
     async function callGetItems() {
       const trackedItems = await getTrackedItems(tracking);

@@ -8,17 +8,8 @@ import Material from './Material';
 import { giveItem } from '@/reducers/givenSlice';
 import CompletedModal from './CompletedModal';
 
-export default function ItemDetails({ item }) {
+export default function ItemDetails({ item, status, materials }) {
   const dispatch = useDispatch();
-
-  const status = useSelector(state => state.status.find(i => i.id === item._id));
-  const holding = useSelector(state => state.holding) || [];
-
-  const materials = item.materials.map(({ material, quantity }) => {
-    const holdingCount = holding.find(i => i.id === material._id)?.count || 0;
-
-    return { material, quantity, holding: holdingCount };
-  });
 
   return (
     <>
@@ -64,7 +55,6 @@ export default function ItemDetails({ item }) {
           </div>
         </dialog>
       ))}
-      <CompletedModal materials={materials} vendor={item.vendor} item={item._id} />
     </>
   );
 }

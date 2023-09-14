@@ -14,7 +14,7 @@ export default function Page() {
 
   useEffect(() => {
     if (user?.loggedIn) {
-      redirect('/');
+      redirect('/?checkUser=true');
     }
   }, [user]);
 
@@ -33,7 +33,7 @@ export default function Page() {
           if (!response.success) {
             setMessage(response.message);
           } else {
-            redirect('/');
+            redirect('/?checkUser=true');
           }
         }}
       >
