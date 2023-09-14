@@ -12,6 +12,7 @@ module.exports = {
   plugins: [require('daisyui')],
   daisyui: {
     themes: [
+      'emerald',
       {
         rdr: {
           primary: '#C50712',

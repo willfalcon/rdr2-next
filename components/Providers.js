@@ -17,5 +17,6 @@ export default function Providers({ children }) {
 
     return () => unsubscribe();
   }, []);
+
   return <Provider store={store}>{children}</Provider>;
 }
