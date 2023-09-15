@@ -8,7 +8,12 @@ import { useClickAway } from '@uidotdev/usehooks';
 
 export default function Menu() {
   const [user, loading] = useUser();
-
+  const initials = user.user?.name
+    .split(' ')
+    .slice(0, 2)
+    .map(word => word[0])
+    .join('')
+    .toUpperCase();
   const ref = useClickAway(e => {
     ref.current.removeAttribute('open');
   });
@@ -20,7 +25,7 @@ export default function Menu() {
       ) : user.loggedIn ? (
         <summary className="avatar placeholder">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
-            <span className="text-xs">AA</span>
+            <span className="text-xs">{initials}</span>
           </div>
         </summary>
       ) : (
@@ -34,7 +39,7 @@ export default function Menu() {
         ) : user.loggedIn ? (
           <>
             <li>
-              <a>{user.user.email}</a>
+              <Link href="/profile">Profile</Link>
             </li>
             <li>
               <button

@@ -9,14 +9,14 @@ import { useUser } from '@/lib/useUser';
 import { experimental_useFormStatus as useFormStatus } from 'react-dom';
 
 export default function Page() {
-  const [user] = useUser();
+  const [user, loading] = useUser();
   const status = useFormStatus();
 
   useEffect(() => {
-    if (user?.loggedIn) {
+    if (!loading && !user?.loggedIn) {
       redirect('/?checkUser=true');
     }
-  }, [user]);
+  }, [user, loading]);
 
   const [message, setMessage] = useState(false);
 
