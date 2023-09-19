@@ -36,6 +36,9 @@ export default async function Home() {
           <Link className="text-2xl font-medium block mb-3 border-b" href="/all">
             All Materials
           </Link>
+          <Link className="text-2xl font-medium block mb-3 border-b" href="/requests">
+            Companion Item Requests
+          </Link>
         </nav>
       </div>
     </>

@@ -6,5 +6,6 @@ import item from './item';
 import weapon from './weapon';
 import ammo from './ammo';
 import user from './user';
+import request from './requests';
 
-export const schemaTypes = [materialType, material, category, vendor, item, weapon, ammo, user];
+export const schemaTypes = [materialType, material, category, vendor, item, weapon, ammo, user, request];
