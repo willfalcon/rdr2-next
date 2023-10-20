@@ -8,6 +8,7 @@ import { useClickAway } from '@uidotdev/usehooks';
 
 export default function Menu() {
   const [user, loading] = useUser();
+
   const initials = user.user?.name
     .split(' ')
     .slice(0, 2)
@@ -23,13 +24,13 @@ export default function Menu() {
       {loading ? (
         <summary>...</summary>
       ) : user.loggedIn ? (
-        <summary className="avatar placeholder">
+        <summary className="avatar placeholder cursor-pointer">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
             <span className="text-xs">{initials}</span>
           </div>
         </summary>
       ) : (
-        <summary className="btn btn-ghost">
+        <summary className="btn btn-ghost cursor-pointer">
           <MdOutlineMenu className="w-8 h-8" />
         </summary>
       )}

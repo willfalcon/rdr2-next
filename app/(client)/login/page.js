@@ -13,7 +13,7 @@ export default function Page() {
   const status = useFormStatus();
 
   useEffect(() => {
-    if (!loading && !user?.loggedIn) {
+    if (!loading && user?.loggedIn) {
       redirect('/?checkUser=true');
     }
   }, [user, loading]);

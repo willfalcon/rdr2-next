@@ -8,9 +8,9 @@ export default function Weapons({ weapons }) {
         </tr>
       </thead>
       <tbody>
-        {weapons.map(({ weapon, ammo }) => {
+        {weapons.map(({ weapon, ammo, _key }) => {
           return (
-            <tr>
+            <tr key={_key}>
               <td>{weapon}</td>
               <td>{ammo}</td>
             </tr>

@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 export default function ItemsList() {
   const tracking = useSelector(trackingSelector);
 
-  // console.log(tracking);
+  console.log(tracking);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
