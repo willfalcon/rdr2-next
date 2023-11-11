@@ -9,7 +9,7 @@ export default function Material(props) {
     const given = state.given.find(g => g.id === id);
     return given?.vendors.reduce((acc, cur) => acc + cur.count, 0) || 0;
   });
-
+  const holding = useSelector(state => state.holding.find(h => h.id === id)?.count || 0);
   return (
     <li className="collapse collapse-arrow border-b grid grid-cols-[1fr_auto] overflow-visible">
       <input type="checkbox" />
@@ -19,7 +19,7 @@ export default function Material(props) {
             {name} {type}
           </span>
           <span className="ml-2">
-            {totalGiven} / {totalNeeded}
+            {holding + totalGiven} / {totalNeeded}
           </span>
         </div>
       </h2>

@@ -3,6 +3,11 @@ import { useSelector } from 'react-redux';
 import ItemDetails from './ItemDetails';
 import classNames from 'classnames';
 import CompletedModal from './CompletedModal';
+import { useState } from 'react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { Separator } from '../ui/separator';
+import { Button } from '../ui/button';
+import { LiaAngleDownSolid } from 'react-icons/lia';
 
 const btnClass = statusCode => {
   switch (statusCode) {
@@ -26,24 +31,30 @@ export default function ListItem(item) {
 
     return { material, quantity, holding: holdingCount };
   });
+
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <div
-        className={classNames('collapse collapse-arrow border-b grid grid-cols-[1fr_auto] overflow-visible rounded-none', {
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className={classNames('', {
           hidden: hideCompleted && status?.status === 3,
         })}
       >
-        <input type="checkbox" />
-
-        <h2 className={classNames('collapse-title text-lg font-medium p-0')}>
-          <div className={classNames('w-full p-4', btnClass(status?.status))}>
+        <CollapsibleTrigger className={classNames('text-lg font-medium p-0 w-full text-left')}>
+          <div className={classNames('w-full p-4 flex justify-between', btnClass(status?.status))}>
             <span className="">{item.name}</span>
+            <Button variant="ghost" size="sm">
+              <LiaAngleDownSolid className={classNames('w-4 h-8', { 'rotate-180': isOpen })} />
+            </Button>
           </div>
-        </h2>
-        <div className="collapse-content">
+        </CollapsibleTrigger>
+        <CollapsibleContent>
           <ItemDetails item={item} status={status} materials={materials} />
-        </div>
-      </div>
+        </CollapsibleContent>
+      </Collapsible>
+      <Separator />
       <CompletedModal materials={materials} vendor={item.vendor} item={item._id} />
     </>
   );

@@ -14,8 +14,8 @@ export default function ItemDetails({ item, status, materials }) {
   return (
     <>
       <ItemStatus status={status} id={item._id} />
-      <h3 className="font-bold mt-3">Materials</h3>
-      <div className="">
+      <h3 className="font-bold mt-3 px-4">Materials</h3>
+      <div className="px-4 mb-4">
         <table className="table table-sm">
           <thead>
             <tr>

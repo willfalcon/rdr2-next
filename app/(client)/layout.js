@@ -13,10 +13,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark:bg-slate-900" data-theme="emerald">
+    <html lang="en">
       <body className={inter.className}>
         <Toaster />
-        <Providers>
+        <Providers attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Navbar />
           <div className="py-3">{children}</div>
         </Providers>

@@ -12,7 +12,7 @@ const ListItem = dynamic(() => import('@/components/item/ListItem'), { ssr: fals
 export default async function Page({ params }) {
   const slug = params.slug;
   const { items, category } = await getList(slug);
-
+  console.log(items);
   items.sort(alphabetical);
 
   return (

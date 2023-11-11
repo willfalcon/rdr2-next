@@ -8,7 +8,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import Menu from './Menu';
 import { useUser } from '@/lib/useUser';
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from './ui/navigation-menu';
 
 export default function Navbar() {
   const params = useSearchParams();
@@ -32,17 +31,15 @@ export default function Navbar() {
   }, [path, params]);
 
   return (
-    <NavigationMenu className="p-4">
-      <NavigationMenuList>
-        <div className="flex-1">
-          <Link href="/" className="btn btn-ghost normal-case text-2xl tracking-tight font-bold">
-            RDR2 Checklist
-          </Link>
-        </div>
+    <div className="navbar">
+      <div className="flex-1">
+        <Link href="/" className="btn btn-ghost normal-case text-2xl tracking-tight font-bold">
+          RDR2 Checklist
+        </Link>
+      </div>
 
-        <Menu />
-        <Settings />
-      </NavigationMenuList>
-    </NavigationMenu>
+      <Menu />
+      <Settings />
+    </div>
   );
 }

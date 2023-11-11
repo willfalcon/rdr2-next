@@ -9,13 +9,13 @@ import { useSelector } from 'react-redux';
 export default function ItemsList() {
   const tracking = useSelector(trackingSelector);
 
-  console.log(tracking);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     async function callGetItems() {
       const trackedItems = await getTrackedItems(tracking);
-      // console.log(trackedItems);
+      console.log(tracking);
+      console.log(trackedItems);
       trackedItems.sort(alphabetical);
       // console.log(trackedItems);
       setItems(trackedItems);

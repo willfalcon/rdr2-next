@@ -33,7 +33,7 @@ export default function ItemStatus({ status, id }) {
   const dispatch = useDispatch();
   return (
     <>
-      <div className="join mt-4">
+      <div className="join mt-4 px-4">
         <button
           className={classNames('join-item rounded-l-full btn', btnClass(statusCode))}
           onClick={() => {
