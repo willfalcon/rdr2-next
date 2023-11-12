@@ -1,56 +1,64 @@
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Table, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { giveItem, ungiveItem } from '@/reducers/givenSlice';
 import { decrementHolding, incrementHolding } from '@/reducers/holdingSlice';
 
-import { AiFillCaretRight } from 'react-icons/ai';
+import { AiFillCaretRight, AiFillPlusCircle, AiFillRightCircle } from 'react-icons/ai';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
 import { CiCircleMore } from 'react-icons/ci';
 import { useDispatch, useSelector } from 'react-redux';
 
 function Vendor({ vendor, material, holding }) {
   const given = useSelector(state => state.given.find(g => g.id === material)?.vendors.find(v => v.id === vendor.id)?.count || 0);
+  const used = useSelector(state => state.used.find(u => u.id === material)?.vendors.find(v => v.id === vendor.id)?.count || 0);
   const dispatch = useDispatch();
 
   return (
-    <tr>
-      <td className="pl-0">{vendor.name}</td>
-      <td>{vendor.count}</td>
-      <td className="pr-0">
-        <button
-          className="flex items-center"
+    <TableRow>
+      <TableCell className="pl-0">{vendor.name}</TableCell>
+      <TableCell>{vendor.count}</TableCell>
+      <TableCell>
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => {
-            // dispatch(incrementGiven({ material: id, vendor: vendor._id }));
             if (holding < 1) {
-              document.getElementById(`${material}-${vendor.id}`).showModal();
+              document.getElementById(`${item}-${material._id}`).showModal();
             } else {
-              dispatch(giveItem({ vendor: vendor.id, item: material }));
+              dispatch(giveItem({ vendor: vendor._id, item: material._id }));
+              dispatch(decrementHolding(material._id));
             }
-            dispatch(decrementHolding(material));
           }}
+          className="space-x-1"
         >
-          <span className="bg-success rounded-full mr-1">
-            <AiFillCaretRight className="fill-white translate-x-[1px]" />
-          </span>
-          {given}
-        </button>
-      </td>
-      <td className="dropdown dropdown-end">
-        <label tabIndex={0} className="">
-          <CiCircleMore />
-        </label>
-        <div tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 z-[2] w-64">
-          <button
-            onClick={() => {
-              if (given > 0) {
-                dispatch(ungiveItem({ vendor: vendor.id, item: material }));
-                dispatch(incrementHolding(material));
-              }
-            }}
-          >
-            Take one back
-          </button>
-        </div>
-      </td>
-    </tr>
+          <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
+          <span>{given}</span>
+        </Button>
+      </TableCell>
+      <TableCell className="pr-0">{used}</TableCell>
+      <TableCell>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <CiCircleMore />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem asChild>
+              <button
+                onClick={() => {
+                  if (given > 0) {
+                    dispatch(ungiveItem({ vendor: vendor.id, item: material }));
+                    dispatch(incrementHolding(material));
+                  }
+                }}
+              >
+                Take one back
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+    </TableRow>
   );
 }
 
@@ -63,43 +71,49 @@ export default function Manage(props) {
     <>
       <div className="text-sm grid items-center grid-rows-1 grid-cols-[auto,auto,1fr] w-full">
         <span>Holding: {holding}</span>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => {
-            dispatch(incrementHolding(id));
+            dispatch(incrementHolding(material._id));
           }}
         >
-          <BsFillPlusCircleFill className="fill-warning ml-1" />
-        </button>
-        <div className="dropdown flex justify-end z-[2]">
-          <label tabIndex={0} className="">
-            <CiCircleMore className="justify-self-end" />
-          </label>
-          <div tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 z-[1]">
-            <button
-              onClick={() => {
-                dispatch(decrementHolding(id));
-              }}
-            >
-              Lose one
-            </button>
-          </div>
-        </div>
+          <AiFillPlusCircle className="h-6 w-6 fill-yellow-500" />
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger tabIndex={0} className="justify-self-end">
+            <CiCircleMore />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem asChild>
+              <button
+                onClick={() => {
+                  dispatch(decrementHolding(id));
+                }}
+              >
+                Lose one
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-      <table className="table table-sm">
-        <thead>
-          <tr>
-            <th className="pl-0">Vendor</th>
-            <th>Needed</th>
-            <th className="pr-0">Given</th>
-          </tr>
-        </thead>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="pl-0">Vendor</TableHead>
+            <TableHead>Needed</TableHead>
+            <TableHead>Given</TableHead>
+            <TableHead className="pr-0">Used</TableHead>
+          </TableRow>
+        </TableHeader>
         <tbody>
           {vendors.map(vendor => {
             // const given = givenList.find(item => item.vendor === vendor._id && item.material === id);
             return <Vendor key={vendor.id} material={id} vendor={vendor} holding={holding} />;
           })}
         </tbody>
-      </table>
+      </Table>
       {vendors.map(vendor => (
         <dialog key={`${id}-${vendor.id}`} id={`${id}-${vendor.id}`} className="modal">
           <div className="modal-box">

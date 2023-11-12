@@ -1,5 +1,6 @@
 'use client';
 import ListItem from '@/components/item/ListItem';
+import { Accordion } from '@/components/ui/accordion';
 import { getTrackedItems } from '@/lib/fetching';
 import { alphabetical } from '@/lib/utils';
 import { trackingSelector } from '@/reducers/statusSlice';
@@ -24,14 +25,10 @@ export default function ItemsList() {
   }, []);
 
   return (
-    <ul>
+    <Accordion type="single" collapsible>
       {items.map(item => {
-        return (
-          <div className="border-b grid grid-cols-[1fr_auto]" key={item._id}>
-            <ListItem {...item} vendor={item.categories[0].vendor} />
-          </div>
-        );
+        return <ListItem {...item} vendor={item.categories[0].vendor} key={item._id} />;
       })}
-    </ul>
+    </Accordion>
   );
 }

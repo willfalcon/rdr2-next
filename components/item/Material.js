@@ -1,8 +1,12 @@
 import { decrementHolding, incrementHolding } from '@/reducers/holdingSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { AiFillCaretRight, AiFillPlusCircle } from 'react-icons/ai';
+import { AiFillCaretRight, AiFillPlusCircle, AiFillRightCircle } from 'react-icons/ai';
 import { giveItem, ungiveItem } from '@/reducers/givenSlice';
 import { CiCircleMore } from 'react-icons/ci';
+import { TableCell, TableRow } from '../ui/table';
+
+import { Button } from '../ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 export default function Material({ material, quantity, holding, vendor, item }) {
   const dispatch = useDispatch();
@@ -19,30 +23,31 @@ export default function Material({ material, quantity, holding, vendor, item }) 
   });
 
   return (
-    <>
-      <tr>
-        <td className="pl-0">
-          <input type="checkbox" className="checkbox" checked={false} onChange={() => {}} />
-        </td>
-        <td className="">
-          {material.name} {material.type}
-        </td>
-        <td>{quantity}</td>
-
-        <td>
-          <button
-            className="flex items-center"
+    <TableRow key={material._id}>
+      <TableCell>
+        {quantity} {material.name} {material.type}
+        {quantity > 1 && 's'}
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => {
               dispatch(incrementHolding(material._id));
             }}
           >
-            <AiFillPlusCircle className="fill-warning mr-1" />
-            {holding}
-          </button>
-        </td>
-        <td>
-          <button
-            className="flex items-center"
+            <AiFillPlusCircle className="h-6 w-6 fill-yellow-500" />
+          </Button>
+          {holding}
+        </div>
+      </TableCell>
+
+      <TableCell>
+        <div className="flex items-center justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => {
               if (holding < 1) {
                 document.getElementById(`${item}-${material._id}`).showModal();
@@ -52,45 +57,43 @@ export default function Material({ material, quantity, holding, vendor, item }) 
               }
             }}
           >
-            <span className="bg-success rounded-full mr-1">
-              <AiFillCaretRight className="fill-white translate-x-[1px]" />
-            </span>
-            {given}
-          </button>
-        </td>
-        <td>
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="h-5 flex items-center">
-              <CiCircleMore />
-            </label>
-            <ul tabIndex={0} className="dropdown-content z-[2] menu p-2 shadow bg-base-100 rounded-box w-64">
-              <li>
-                <button
-                  onClick={() => {
-                    if (given > 0) {
-                      dispatch(ungiveItem({ vendor: vendor._id, item: material._id }));
-                      dispatch(incrementHolding(material._id));
-                    }
-                  }}
-                >
-                  Take one back
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    if (holding > 0) {
-                      dispatch(decrementHolding(material._id));
-                    }
-                  }}
-                >
-                  Lose one
-                </button>
-              </li>
-            </ul>
-          </div>
-        </td>
-      </tr>
-    </>
+            <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
+          </Button>
+          {given}
+        </div>
+      </TableCell>
+      <TableCell>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <CiCircleMore />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem asChild>
+              <button
+                onClick={() => {
+                  if (given > 0) {
+                    dispatch(ungiveItem({ vendor: vendor._id, item: material._id }));
+                    dispatch(incrementHolding(material._id));
+                  }
+                }}
+              >
+                Take one back
+              </button>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <button
+                onClick={() => {
+                  if (holding > 0) {
+                    dispatch(decrementHolding(material._id));
+                  }
+                }}
+              >
+                Lose one
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+    </TableRow>
   );
 }
