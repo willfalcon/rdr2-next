@@ -2,40 +2,61 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import ItemStatus from './ItemStatus';
-
 import Material from './Material';
-import { giveItem } from '@/reducers/givenSlice';
-import CompletedModal from './CompletedModal';
 import { Button } from '../ui/button';
 import { changeStatus } from '@/reducers/statusSlice';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '../ui/table';
-import classNames from 'classnames';
+import { createSelector } from '@reduxjs/toolkit';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
+import { ungiveItem } from '@/reducers/givenSlice';
 
-const btnClass = statusCode => {
-  switch (statusCode) {
-    case 2:
-      return 'btn-warning';
-    case 3:
-      return 'btn-success';
-    case 1:
-    default:
-      '';
+const selectGiven = state => state.given;
+
+export const getGivenMaterialForVendor = (givenState, vendor, material) => {
+  if (givenState.length) {
+    const i = givenState.findIndex(mat => mat.id === material);
+    if (i >= 0) {
+      return givenState[i].vendors.find(ven => ven.id === vendor)?.count || 0;
+    }
   }
+  return 0;
 };
 
-export default function ItemDetails({ item, status, materials }) {
+export default function ItemDetails({ item, status, materials, tracking, crafted }) {
   const dispatch = useDispatch();
-  const tracking = status.status === 2;
-  const crafted = status.status === 3;
+
+  const allItemsGiven = useSelector(state => {
+    return materials.every(material => {
+      const given = getGivenMaterialForVendor(state.given, item.vendor._id, material.material._id);
+      return given >= material.quantity;
+    });
+  });
+
+  function craftItem() {
+    const newStatus = !status ? 3 : status.status === 3 ? 2 : 3;
+    dispatch(changeStatus({ item: item._id, status: newStatus }));
+    materials.forEach(material => {
+      dispatch(ungiveItem({ item: material.material._id, vendor: item.vendor._id, count: material.quantity }));
+      dispatch(useItem({ item: material.material._id, vendor: item.vendor._id, count: material.quantity }));
+    });
+  }
 
   return (
     <>
-      {/* <ItemStatus status={status} id={item._id} /> */}
-      <div className="space-x-2">
+      <div className="space-x-2 px-4">
         <Button
           variant="ghost"
-          className={tracking ? 'bg-yellow-400 hover:bg-yellow-400' : 'bg-yellow-100'}
+          className={tracking ? 'bg-yellow-400 hover:bg-yellow-400' : 'bg-secondary'}
           onClick={() => {
             const newStatus = !status ? 2 : status.status === 2 ? 1 : 2;
             dispatch(changeStatus({ item: item._id, status: newStatus }));
@@ -43,19 +64,30 @@ export default function ItemDetails({ item, status, materials }) {
         >
           {tracking ? 'Tracking' : 'Track'}
         </Button>
-
-        <Button
-          variant="ghost"
-          className={crafted ? 'bg-green-400 hover:bg-yellow0400' : 'bg-green-100'}
-          onClick={() => {
-            const newStatus = !status ? 3 : status.status === 3 ? 2 : 3;
-            dispatch(changeStatus({ item: item._id, status: newStatus }));
-          }}
-        >
-          {crafted ? 'Crafted' : 'Craft'}
-        </Button>
+        {allItemsGiven || crafted ? (
+          <Button variant="ghost" className={crafted ? 'bg-green-400 hover:bg-green-400' : 'bg-secondary'} onClick={craftItem}>
+            {crafted ? 'Crafted' : 'Craft'}
+          </Button>
+        ) : (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" className={crafted ? 'bg-green-400 hover:bg-green-400' : 'bg-secondary'}>
+                {crafted ? 'Crafted' : 'Craft'}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Not all materials given!</AlertDialogTitle>
+                <AlertDialogDescription>Not all necessary items have been given. Craft anyway?</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={craftItem}>Craft anyway</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
-      {/* <h3 className="font-bold mt-3 px-4">Materials</h3> */}
 
       <Table>
         <TableHeader>
@@ -72,27 +104,6 @@ export default function ItemDetails({ item, status, materials }) {
           })}
         </TableBody>
       </Table>
-      {materials.map(material => (
-        <dialog id={`${item._id}-${material.material._id}`} className="modal" key={material.material._id}>
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Are you sure?</h3>
-            <p className="py-4">You're not holding any of this item. Are you sure you want to increase the number of items you've given?</p>
-            <div className="modal-action">
-              <form method="dialog">
-                <button className="btn mr-1">Cancel</button>
-                <button
-                  className="btn btn-warning"
-                  onClick={() => {
-                    dispatch(giveItem({ vendor: item.vendor._id, item: material.material._id }));
-                  }}
-                >
-                  Give item anyway
-                </button>
-              </form>
-            </div>
-          </div>
-        </dialog>
-      ))}
     </>
   );
 }

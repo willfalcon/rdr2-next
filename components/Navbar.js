@@ -32,17 +32,15 @@ export default function Navbar() {
   }, [path, params]);
 
   return (
-    <NavigationMenu className="p-4">
-      <NavigationMenuList>
-        <div className="flex-1">
-          <Link href="/" className="btn btn-ghost normal-case text-2xl tracking-tight font-bold">
-            RDR2 Checklist
-          </Link>
-        </div>
+    <nav className="p-4 flex gap-4">
+      <div className="flex-1">
+        <Link href="/" className="btn btn-ghost normal-case text-2xl tracking-tight font-bold">
+          RDR2 Checklist
+        </Link>
+      </div>
 
-        <Menu />
-        <Settings />
-      </NavigationMenuList>
-    </NavigationMenu>
+      <Menu />
+      <Settings />
+    </nav>
   );
 }

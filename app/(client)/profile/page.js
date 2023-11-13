@@ -10,7 +10,7 @@ export default function Page() {
   const [user, loading] = useUser();
   const [message, setMessage] = useState(false);
   const status = useFormStatus();
-  console.log(user);
+
   useEffect(() => {
     if (!loading && !user?.loggedIn) {
       redirect('/login');

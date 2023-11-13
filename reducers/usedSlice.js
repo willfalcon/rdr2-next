@@ -5,17 +5,17 @@ const usedSlice = createSlice({
   initialState: [],
   reducers: {
     useItem(state, action) {
-      const { item, vendor } = action.payload;
+      const { item, vendor, count = 1 } = action.payload;
       const index = state.findIndex(i => i.id === item);
 
       if (index < 0) {
-        state.push({ id: item, vendors: [{ id: vendor, count: 1 }] });
+        state.push({ id: item, vendors: [{ id: vendor, count }] });
       } else {
         const vendorIndex = state[index].vendors.findIndex(i => i.id === vendor);
         if (vendorIndex < 0) {
-          state[index].vendors.push({ id: vendor, count: 1 });
+          state[index].vendors.push({ id: vendor, count });
         } else {
-          state[index].vendors[vendorIndex].count += 1;
+          state[index].vendors[vendorIndex].count += count;
         }
       }
     },

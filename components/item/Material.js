@@ -4,7 +4,17 @@ import { AiFillCaretRight, AiFillPlusCircle, AiFillRightCircle } from 'react-ico
 import { giveItem, ungiveItem } from '@/reducers/givenSlice';
 import { CiCircleMore } from 'react-icons/ci';
 import { TableCell, TableRow } from '../ui/table';
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
@@ -45,23 +55,59 @@ export default function Material({ material, quantity, holding, vendor, item }) 
 
       <TableCell>
         <div className="flex items-center justify-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              if (holding < 1) {
-                document.getElementById(`${item}-${material._id}`).showModal();
-              } else {
+          {holding < 1 ? (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    if (holding < 1) {
+                      // document.getElementById(`${item}-${material._id}`).showModal();
+                    } else {
+                      dispatch(giveItem({ vendor: vendor._id, item: material._id }));
+                      dispatch(decrementHolding(material._id));
+                    }
+                  }}
+                >
+                  <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    You're not holding any of this item. Are you sure you want to increase the number of items you've given?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      dispatch(giveItem({ vendor: vendor._id, item: material._id }));
+                    }}
+                  >
+                    Give item anyway
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
                 dispatch(giveItem({ vendor: vendor._id, item: material._id }));
                 dispatch(decrementHolding(material._id));
-              }
-            }}
-          >
-            <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
-          </Button>
+              }}
+            >
+              <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
+            </Button>
+          )}
           {given}
         </div>
       </TableCell>
+
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger>

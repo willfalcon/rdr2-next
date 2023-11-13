@@ -12,6 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from './ui/navigation-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 export default function Menu() {
   const [user, loading] = useUser();
@@ -27,8 +28,8 @@ export default function Menu() {
   });
 
   return (
-    <NavigationMenuItem className="">
-      <NavigationMenuTrigger>
+    <DropdownMenu className="">
+      <DropdownMenuTrigger>
         {loading ? (
           '...'
         ) : user.loggedIn ? (
@@ -42,17 +43,17 @@ export default function Menu() {
             <MdOutlineMenu className="w-8 h-8" />
           </div>
         )}
-      </NavigationMenuTrigger>
-      <NavigationMenuContent>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
         {/* <ul className="mt-3 z-[2] p-2 shadow menu menu-sm dropdown-content rounded-box w-52 bg-base-100"> */}
         {loading ? (
-          <li>Hang on, give me a second...</li>
+          <DropdownMenuLabel>Hang on, give me a second...</DropdownMenuLabel>
         ) : user.loggedIn ? (
           <>
-            <Link href="/profile">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>Profile</NavigationMenuLink>
-            </Link>
-            <NavigationMenuLink
+            <DropdownMenuItem asChild>
+              <Link href="/profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
               onClick={() => {
                 toast.promise(handleSave(), {
                   loading: 'Saving...',
@@ -62,8 +63,8 @@ export default function Menu() {
               }}
             >
               Save
-            </NavigationMenuLink>
-            <NavigationMenuLink
+            </DropdownMenuItem>
+            <DropdownMenuItem
               onClick={() => {
                 toast.promise(handleLoad(), {
                   loading: 'Loading...',
@@ -73,23 +74,23 @@ export default function Menu() {
               }}
             >
               Load
-            </NavigationMenuLink>
-            <Link href="/logout">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>Logout</NavigationMenuLink>
-            </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/logout">Logout</Link>
+            </DropdownMenuItem>
           </>
         ) : (
           <>
-            <li>
+            <DropdownMenuItem asChild>
               <Link href="/login">Login</Link>
-            </li>
-            <li>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link href="/signup">Signup</Link>
-            </li>
+            </DropdownMenuItem>
           </>
         )}
         {/* </ul> */}
-      </NavigationMenuContent>
-    </NavigationMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

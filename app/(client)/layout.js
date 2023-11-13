@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Toaster />
-        <Providers attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <Providers enableSystem disableTransitionOnChange>
           <Navbar />
           <div className="py-3">{children}</div>
         </Providers>
