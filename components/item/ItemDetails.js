@@ -19,6 +19,10 @@ import {
   AlertDialogTrigger,
 } from '../ui/alert-dialog';
 import { ungiveItem } from '@/reducers/givenSlice';
+import { useItem } from '@/reducers/usedSlice';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTrigger } from '../ui/dialog';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import Craft from './Craft';
 
 const selectGiven = state => state.given;
 
@@ -35,22 +39,6 @@ export const getGivenMaterialForVendor = (givenState, vendor, material) => {
 export default function ItemDetails({ item, status, materials, tracking, crafted }) {
   const dispatch = useDispatch();
 
-  const allItemsGiven = useSelector(state => {
-    return materials.every(material => {
-      const given = getGivenMaterialForVendor(state.given, item.vendor._id, material.material._id);
-      return given >= material.quantity;
-    });
-  });
-
-  function craftItem() {
-    const newStatus = !status ? 3 : status.status === 3 ? 2 : 3;
-    dispatch(changeStatus({ item: item._id, status: newStatus }));
-    materials.forEach(material => {
-      dispatch(ungiveItem({ item: material.material._id, vendor: item.vendor._id, count: material.quantity }));
-      dispatch(useItem({ item: material.material._id, vendor: item.vendor._id, count: material.quantity }));
-    });
-  }
-
   return (
     <>
       <div className="space-x-2 px-4">
@@ -64,29 +52,7 @@ export default function ItemDetails({ item, status, materials, tracking, crafted
         >
           {tracking ? 'Tracking' : 'Track'}
         </Button>
-        {allItemsGiven || crafted ? (
-          <Button variant="ghost" className={crafted ? 'bg-green-400 hover:bg-green-400' : 'bg-secondary'} onClick={craftItem}>
-            {crafted ? 'Crafted' : 'Craft'}
-          </Button>
-        ) : (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" className={crafted ? 'bg-green-400 hover:bg-green-400' : 'bg-secondary'}>
-                {crafted ? 'Crafted' : 'Craft'}
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Not all materials given!</AlertDialogTitle>
-                <AlertDialogDescription>Not all necessary items have been given. Craft anyway?</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={craftItem}>Craft anyway</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+        <Craft crafted={crafted} item={item} vendor={item.vendor} materials={materials} status={status} />
       </div>
 
       <Table>

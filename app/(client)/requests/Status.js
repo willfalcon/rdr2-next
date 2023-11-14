@@ -2,13 +2,16 @@ import { AiFillCaretLeft, AiFillCaretRight } from 'react-icons/ai';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeRequestState } from '@/reducers/requestsSlice';
+import { Button } from '@/components/ui/button';
 
 const btnClass = statusCode => {
   switch (statusCode) {
     case 2:
-      return 'btn-warning';
+      return 'bg-yellow-400 border-yellow-400 hover:border-yellow-500';
     case 3:
-      return 'btn-success';
+      return 'bg-orange-500 border-orange-500 hover:border-orange-500';
+    case 4:
+      return 'bg-green-500 border-green-500 hover:border-green-500';
     case 1:
     default:
       '';
@@ -20,6 +23,8 @@ const statusText = statusCode => {
     case 2:
       return 'Looking';
     case 3:
+      return 'Found';
+    case 4:
       return 'Given';
     case 1:
     default:
@@ -30,7 +35,6 @@ const statusText = statusCode => {
 export default function Status({ _id }) {
   const dispatch = useDispatch();
   const status = useSelector(state => state.requests.find(i => i.id === _id)?.state);
-
   return (
     <>
       <div className="join my-6">
@@ -47,7 +51,7 @@ export default function Status({ _id }) {
         <button
           className={classNames('join-item rounded-r-full btn', btnClass(status))}
           onClick={() => {
-            const newStatus = !status ? 2 : status >= 3 ? 3 : status + 1;
+            const newStatus = !status ? 2 : status >= 4 ? 4 : status + 1;
             dispatch(changeRequestState({ item: _id, state: newStatus }));
           }}
         >

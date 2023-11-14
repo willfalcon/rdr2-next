@@ -24,8 +24,12 @@ const givenSlice = createSlice({
       const index = state.findIndex(i => i.id === item);
       if (index >= 0) {
         const vendorIndex = state[index].vendors.findIndex(i => i.id === vendor);
-        if (vendorIndex >= 0 && state[index].vendors[vendorIndex].count > 0) {
-          state[index].vendors[vendorIndex].count -= count;
+        if (vendorIndex >= 0) {
+          if (state[index].vendors[vendorIndex].count >= count) {
+            state[index].vendors[vendorIndex].count -= count;
+          } else {
+            state[index].vendors[vendorIndex].count = 0;
+          }
         }
       }
     },

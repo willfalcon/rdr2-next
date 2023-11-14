@@ -8,6 +8,8 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Material from './Material';
+import { Accordion } from '@/components/ui/accordion';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function MaterialsList() {
   const [materials, setMaterials] = useState([]);
@@ -48,27 +50,21 @@ export default function MaterialsList() {
     }
     doIt();
   }, [tracking]);
-  const [mode, setMode] = useState('manage');
   return (
     <>
       <Title>Materials</Title>
 
-      <div className="px-4">
-        <div className="tabs tabs-boxed inline-flex">
-          <button className={classNames('tab', { 'tab-active': mode === 'manage' })} onClick={() => setMode('manage')}>
-            Manage
-          </button>
-          <button className={classNames('tab', { 'tab-active': mode === 'weapons' })} onClick={() => setMode('weapons')}>
-            Weapons
-          </button>
-        </div>
-      </div>
-
-      <ul className="mb-3">
-        {materials.map(material => {
-          return <Material key={material.id} {...material} mode={mode} />;
-        })}
-      </ul>
+      <Tabs defaultValue="manage">
+        <TabsList>
+          <TabsTrigger value="manage">Manage</TabsTrigger>
+          <TabsTrigger value="weapons">Weapons</TabsTrigger>
+        </TabsList>
+        <Accordion className="mb-3" type="single" collapsible>
+          {materials.map(material => {
+            return <Material key={material.id} {...material} />;
+          })}
+        </Accordion>
+      </Tabs>
     </>
   );
 }
