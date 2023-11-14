@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import Status from './Status';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 export default function Item(props) {
   const { person, item, locationImage, _id, locationDescription, chapter, mission } = props;
@@ -48,9 +50,14 @@ export default function Item(props) {
           <div>
             <p>{locationDescription}</p>
             {locationImage && (
-              <button className="btn btn-neutral" onClick={() => document.getElementById(`${_id}-image`).showModal()}>
-                View on Map
-              </button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>View on Map</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <Image image={locationImage} />
+                </DialogContent>
+              </Dialog>
             )}
           </div>
         ) : (
@@ -66,16 +73,6 @@ export default function Item(props) {
             </p>
             <p>{mission}</p>
           </div>
-        )}
-        {locationImage && (
-          <dialog id={`${_id}-image`} className="modal">
-            <div className="modal-box">
-              <form method="dialog">
-                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">X</button>
-              </form>
-              <Image image={locationImage} />
-            </div>
-          </dialog>
         )}
       </AccordionContent>
     </AccordionItem>

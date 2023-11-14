@@ -1,3 +1,14 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Table, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -10,6 +21,7 @@ import { CiCircleMore } from 'react-icons/ci';
 import { useDispatch, useSelector } from 'react-redux';
 
 function Vendor({ vendor, material, holding }) {
+  console.log(vendor);
   const given = useSelector(state => state.given.find(g => g.id === material)?.vendors.find(v => v.id === vendor.id)?.count || 0);
   const used = useSelector(state => state.used.find(u => u.id === material)?.vendors.find(v => v.id === vendor.id)?.count || 0);
   const dispatch = useDispatch();
@@ -19,22 +31,47 @@ function Vendor({ vendor, material, holding }) {
       <TableCell className="pl-0">{vendor.name}</TableCell>
       <TableCell>{vendor.count}</TableCell>
       <TableCell>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            if (holding < 1) {
-              document.getElementById(`${item}-${material._id}`).showModal();
-            } else {
-              dispatch(giveItem({ vendor: vendor._id, item: material._id }));
-              dispatch(decrementHolding(material._id));
-            }
-          }}
-          className="space-x-1"
-        >
-          <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
-          <span>{given}</span>
-        </Button>
+        {holding < 1 ? (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="space-x-1">
+                <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
+                <span>{given}</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You're not holding any of this item. Are you sure you want to increase the number of items you've given?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    dispatch(giveItem({ vendor: vendor.id, item: material }));
+                  }}
+                >
+                  Give item anyway
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              dispatch(giveItem({ vendor: vendor.id, item: material }));
+              dispatch(decrementHolding(material));
+            }}
+            className="space-x-1"
+          >
+            <AiFillRightCircle className="fill-green-500 translate-x-[1px] h-6 w-6" />
+            <span>{given}</span>
+          </Button>
+        )}
       </TableCell>
       <TableCell className="pr-0">{used}</TableCell>
       <TableCell>
@@ -75,7 +112,7 @@ export default function Manage(props) {
           variant="ghost"
           size="icon"
           onClick={() => {
-            dispatch(incrementHolding(material._id));
+            dispatch(incrementHolding(id));
           }}
         >
           <AiFillPlusCircle className="h-6 w-6 fill-yellow-500" />

@@ -5,13 +5,6 @@ import { useUser } from '@/lib/useUser';
 import { MdOutlineMenu } from 'react-icons/md';
 import toast from 'react-hot-toast';
 import { useClickAway } from '@uidotdev/usehooks';
-import {
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from './ui/navigation-menu';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 export default function Menu() {
@@ -23,6 +16,7 @@ export default function Menu() {
     .map(word => word[0])
     .join('')
     .toUpperCase();
+
   const ref = useClickAway(e => {
     ref.current.removeAttribute('open');
   });

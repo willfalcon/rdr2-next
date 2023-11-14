@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import Menu from './Menu';
 import { useUser } from '@/lib/useUser';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from './ui/navigation-menu';
+import Theme from './Theme';
 
 export default function Navbar() {
   const params = useSearchParams();
@@ -41,6 +42,7 @@ export default function Navbar() {
 
       <Menu />
       <Settings />
+      <Theme />
     </nav>
   );
 }

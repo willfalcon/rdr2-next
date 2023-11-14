@@ -15,14 +15,7 @@ export default function Material(props) {
   return (
     <AccordionItem value={id}>
       <AccordionTrigger className="px-4">{`${name} ${type} ${holding + totalGiven} / ${totalNeeded}`}</AccordionTrigger>
-      {/* <h2 className="collapse-title text-lg font-medium">
-        <div className="w-[95%]">
-          <span className=""></span>
-          <span className="ml-2">
-            {holding + totalGiven} / {totalNeeded}
-          </span>
-        </div>
-      </h2> */}
+
       <AccordionContent>
         <div className="px-4">
           {/* {mode === 'manage' ? <Manage id={id} vendors={vendors} /> : <Weapons weapons={weapons} />} */}

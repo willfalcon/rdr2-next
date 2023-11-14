@@ -13,10 +13,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Toaster />
-        <Providers enableSystem disableTransitionOnChange>
+        <Providers attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Navbar />
           <div className="py-3">{children}</div>
         </Providers>

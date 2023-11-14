@@ -7,7 +7,7 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordi
 import { Badge } from '../ui/badge';
 
 export default function ListItem(item) {
-  const status = useSelector(state => state.status.find(i => i.id === item._id));
+  const status = useSelector(state => state.status.find(i => i.id === item._id) || 0);
   const hideCompleted = useSelector(state => state.settings.hideCompleted);
   const holding = useSelector(state => state.holding) || [];
 
