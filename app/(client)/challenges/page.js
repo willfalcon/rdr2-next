@@ -5,13 +5,14 @@ import { Accordion } from '@/components/ui/accordion';
 import { getChallengeTypes } from '@/lib/fetching';
 import Back from '@/components/Back';
 import Title from '@/components/Title';
+import { alphabetical } from '@/lib/utils';
 
-import ChallengeType from '@/components/challenges/ChallengeType';
-// const ChallengeType = dynamic(() => import('@/components/challenges/ChallengeType'), { ssr: false });
+// import ChallengeType from '@/components/challenges/ChallengeType';
+const ChallengeType = dynamic(() => import('@/components/challenges/ChallengeType'), { ssr: false });
 
 export default async function page() {
   const challengeTypes = await getChallengeTypes();
-
+  challengeTypes.sort(alphabetical);
   return (
     <>
       <Back />

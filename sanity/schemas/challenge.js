@@ -31,6 +31,27 @@ export default defineType({
       title: 'Details',
       type: 'blockContent',
     }),
+    defineField({
+      name: 'trackingType',
+      title: 'Tracking Type',
+      type: 'string',
+      options: {
+        list: ['counter', 'checklist'],
+      },
+    }),
+    defineField({
+      name: 'counter',
+      title: 'Counter',
+      type: 'number',
+      hidden: ({ document }) => document.trackingType !== 'counter',
+    }),
+    defineField({
+      name: 'checklist',
+      title: 'Checklist',
+      type: 'array',
+      of: [{ type: 'string' }],
+      hidden: ({ document }) => document.trackingType !== 'checklist',
+    }),
   ],
   preview: {
     select: {
