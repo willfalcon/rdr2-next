@@ -38,9 +38,12 @@ const givenSlice = createSlice({
         state.push(item);
       });
     },
+    clearGiven(state) {
+      state = [];
+    },
   },
 });
 
 export default givenSlice.reducer;
 
-export const { giveItem, ungiveItem, replaceGivenState } = givenSlice.actions;
+export const { giveItem, ungiveItem, replaceGivenState, clearGiven } = givenSlice.actions;

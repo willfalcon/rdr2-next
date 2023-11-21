@@ -19,11 +19,14 @@ export const statusSlice = createSlice({
         state.push(item);
       });
     },
+    clearStatus(state) {
+      state = [];
+    },
   },
 });
 
 export default statusSlice.reducer;
-export const { changeStatus, replaceStatusState } = statusSlice.actions;
+export const { changeStatus, replaceStatusState, clearStatus } = statusSlice.actions;
 
 const statusSelector = state => state.status;
 export const trackingSelector = createSelector([statusSelector], status => status.filter(item => item.status === 2).map(item => item.id));

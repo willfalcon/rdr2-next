@@ -2,57 +2,94 @@
 
 import Title from '@/components/Title';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { login } from './actions';
-import { useEffect, useState } from 'react';
-import { useUser } from '@/lib/useUser';
-import { experimental_useFormStatus as useFormStatus } from 'react-dom';
+
+const loginFormSchema = z.object({
+  email: z.string().min(1, {
+    message: 'Email is required.',
+  }),
+  password: z.string().min(1, {
+    message: 'Password is required.',
+  }),
+});
 
 export default function Page() {
-  const [user, loading] = useUser();
-  const status = useFormStatus();
+  const form = useForm({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-  useEffect(() => {
-    if (!loading && user?.loggedIn) {
-      redirect('/?checkUser=true');
+  const router = useRouter();
+
+  async function onSubmit(values) {
+    const email = values.email.toLowerCase();
+    const password = values.password;
+
+    try {
+      const res = await login({ email, password });
+      console.log(res);
+      if (res.success) {
+        router.push('/');
+      }
+      if (res.message) {
+        form.setError('custom', { type: 'string', message: res.message });
+      }
+    } catch (error) {
+      console.error('An unexpected error happened occurred:', error);
+
+      form.setError('custom', { type: 'string', message: error.message });
     }
-  }, [user, loading]);
-
-  const [message, setMessage] = useState(false);
+  }
 
   return (
     <div className="w-64 max-w-lg mx-auto">
       <Title h1 className="text-center">
         Login
       </Title>
-      {message && <p className="text-error">{message}</p>}
-      <form
-        action={async formdata => {
-          const response = await login(formdata);
-          console.log(response);
-          if (!response.success) {
-            setMessage(response.message);
-          } else {
-            redirect('/?checkUser=true');
-          }
-        }}
-      >
-        <fieldset disabled={status.pending}>
-          <div className="form-control w-full max-w-lg">
-            <label htmlFor="email" className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input type="email" id="email" name="email" placeholder="Email" className="input input-bordered w-full max-w-sx" />
-          </div>
-          <div className="form-control w-full max-w-lg mb-4">
-            <label htmlFor="password" className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input type="password" id="password" name="password" placeholder="Password" className="input input-bordered w-full max-w-sx" />
-          </div>
-          <input type="submit" className="btn" value="Sign In" />
-        </fieldset>
-      </form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input {...field} type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit">Login</Button>
+        </form>
+      </Form>
     </div>
   );
 }

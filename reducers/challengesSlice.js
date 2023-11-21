@@ -53,8 +53,14 @@ export const challengesSlice = createSlice({
         }
       }
     },
+    clearChallenges(state) {
+      state = {
+        ranks: [],
+        tasks: [],
+      };
+    },
   },
 });
 
 export default challengesSlice.reducer;
-export const { updateChallengeRank, incrementCounter, decrementCounter, toggleItem } = challengesSlice.actions;
+export const { updateChallengeRank, incrementCounter, decrementCounter, toggleItem, clearChallenges } = challengesSlice.actions;

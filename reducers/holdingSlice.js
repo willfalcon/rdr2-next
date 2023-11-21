@@ -26,9 +26,12 @@ export const holdingSlice = createSlice({
         state.push(item);
       });
     },
+    clearHolding(state) {
+      state = [];
+    },
   },
 });
 
 export default holdingSlice.reducer;
 
-export const { incrementHolding, decrementHolding, replaceHoldingState } = holdingSlice.actions;
+export const { incrementHolding, decrementHolding, replaceHoldingState, clearHolding } = holdingSlice.actions;

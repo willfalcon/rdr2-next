@@ -10,20 +10,23 @@ import Menu from './Menu';
 import { useUser } from '@/lib/useUser';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from './ui/navigation-menu';
 import Theme from './Theme';
+import { useAuth } from './Providers';
 
 export default function Navbar() {
   const params = useSearchParams();
   const path = usePathname();
   const router = useRouter();
 
-  const [user, loading, checkUser] = useUser();
+  // const [user, loading, checkUser] = useUser();
 
-  useEffect(() => {
-    if (params.get('checkUser') === 'true') {
-      checkUser();
-      router.replace('/');
-    }
-  }, [params]);
+  // useEffect(() => {
+  //   if (params.get('checkUser') === 'true') {
+  //     checkUser();
+  //     router.replace('/');
+  //   }
+  // }, [params]);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const dropdowns = document.querySelectorAll('details[open]');

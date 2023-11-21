@@ -34,9 +34,12 @@ const usedSlice = createSlice({
         state.push(item);
       });
     },
+    clearUsed(state) {
+      state = [];
+    },
   },
 });
 
 export default usedSlice.reducer;
 
-export const { useItem, unuseItem, replaceUsedState } = usedSlice.actions;
+export const { useItem, unuseItem, replaceUsedState, clearUsed } = usedSlice.actions;

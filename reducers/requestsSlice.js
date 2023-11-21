@@ -14,8 +14,11 @@ export const requestsSlice = createSlice({
         state[index].state = newState;
       }
     },
+    clearRequests(state) {
+      state = [];
+    },
   },
 });
 
 export default requestsSlice.reducer;
-export const { changeRequestState } = requestsSlice.actions;
+export const { changeRequestState, clearRequests } = requestsSlice.actions;

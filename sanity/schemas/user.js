@@ -21,6 +21,16 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'hash',
+      title: 'Hash',
+      type: 'string',
+    }),
+    defineField({
+      name: 'salt',
+      title: 'Salt',
+      type: 'string',
+    }),
+    defineField({
       name: 'store',
       title: 'Store',
       type: 'text',

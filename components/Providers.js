@@ -2,9 +2,10 @@
 
 import { Provider } from 'react-redux';
 import store, { saveState } from '@/lib/store';
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import debounce from '@/lib/debounce';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { getCookie } from '@/lib/utils';
 
 export default function Providers({ children, ...props }) {
   useEffect(() => {
@@ -21,7 +22,18 @@ export default function Providers({ children, ...props }) {
 
   return (
     <Provider store={store}>
-      <NextThemesProvider {...props}>{children}</NextThemesProvider>
+      <AuthProvider>
+        <NextThemesProvider {...props}>{children}</NextThemesProvider>
+      </AuthProvider>
     </Provider>
   );
+}
+
+const AuthContext = createContext();
+const useAuth = () => useContext(AuthContext);
+
+export { useAuth };
+
+function AuthProvider({ children }) {
+  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
 }
