@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { login } from './actions';
+import { useUser } from '@/lib/useUser';
 
 const loginFormSchema = z.object({
   email: z.string().min(1, {
@@ -22,6 +23,8 @@ const loginFormSchema = z.object({
 });
 
 export default function Page() {
+  const [user, loading, refetchUser] = useUser([], { redirectTo: '/', redirectIfFound: true });
+
   const form = useForm({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -38,12 +41,12 @@ export default function Page() {
 
     try {
       const res = await login({ email, password });
-      console.log(res);
       if (res.success) {
         router.push('/');
+        refetchUser();
       }
       if (res.message) {
-        form.setError('custom', { type: 'string', message: res.message });
+        form.setError(res.field || 'custom', { type: 'string', message: res.message });
       }
     } catch (error) {
       console.error('An unexpected error happened occurred:', error);

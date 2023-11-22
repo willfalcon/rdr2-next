@@ -19,15 +19,6 @@ export default function Navbar() {
 
   // const [user, loading, checkUser] = useUser();
 
-  // useEffect(() => {
-  //   if (params.get('checkUser') === 'true') {
-  //     checkUser();
-  //     router.replace('/');
-  //   }
-  // }, [params]);
-
-  const { user } = useAuth();
-
   useEffect(() => {
     const dropdowns = document.querySelectorAll('details[open]');
     dropdowns.forEach(dropdown => {

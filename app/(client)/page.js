@@ -2,10 +2,17 @@ import Title from '@/components/Title';
 
 import { getVendorLists } from '@/lib/fetching';
 import Link from 'next/link';
-import React from 'react';
+
+import { Fragment } from 'react';
 
 export default async function Home() {
   const vendors = await getVendorLists();
+  // const cookieStore = cookies();
+  // const token = cookieStore.get('token');
+  // // console.log(token);
+  // const { userId } = jwt.verify(token.value, process.env.APP_SECRET);
+  // const user = await getUserById(userId);
+
   return (
     <>
       <Title h1>Checklists</Title>
@@ -16,7 +23,7 @@ export default async function Home() {
           </Link>
           {vendors.map(vendor => {
             return (
-              <React.Fragment key={vendor._id}>
+              <Fragment key={vendor._id}>
                 <h3 className="text-2xl font-medium">{vendor.name}</h3>
                 <ul className="grid grid-cols-1 divide-y mb-3">
                   {vendor.lists.map(list => {
@@ -30,7 +37,7 @@ export default async function Home() {
                     );
                   })}
                 </ul>
-              </React.Fragment>
+              </Fragment>
             );
           })}
           <Link className="text-2xl font-medium block mb-3 border-b" href="/all">
