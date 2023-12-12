@@ -55,6 +55,11 @@ export default defineType({
         },
       ],
     }),
+    defineField({
+      name: 'locationNotes',
+      title: 'Location Notes',
+      type: 'blockContent',
+    }),
   ],
   preview: {
     select: {

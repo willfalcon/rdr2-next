@@ -1,7 +1,8 @@
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
-export async function GET() {
+import { NextResponse } from 'next/server';
+
+export async function GET(req) {
   cookies().delete('token');
-  redirect('/?checkUser=true');
+  return NextResponse.redirect(new URL('/?refetchUser=1', req.url));
 }

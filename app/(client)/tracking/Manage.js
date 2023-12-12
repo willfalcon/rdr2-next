@@ -1,3 +1,6 @@
+'use client';
+import Content from '@/components/Content';
+import Image from '@/components/Image';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,26 +13,55 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Table, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { giveItem, ungiveItem } from '@/reducers/givenSlice';
 import { decrementHolding, incrementHolding } from '@/reducers/holdingSlice';
+import Link from 'next/link';
 
-import { AiFillCaretRight, AiFillPlusCircle, AiFillRightCircle } from 'react-icons/ai';
-import { BsFillPlusCircleFill } from 'react-icons/bs';
+import { AiFillPlusCircle, AiFillRightCircle, AiFillInfoCircle } from 'react-icons/ai';
 import { CiCircleMore } from 'react-icons/ci';
 import { useDispatch, useSelector } from 'react-redux';
 
 function Vendor({ vendor, material, holding }) {
-  console.log(vendor);
   const given = useSelector(state => state.given.find(g => g.id === material)?.vendors.find(v => v.id === vendor.id)?.count || 0);
   const used = useSelector(state => state.used.find(u => u.id === material)?.vendors.find(v => v.id === vendor.id)?.count || 0);
   const dispatch = useDispatch();
 
+  const items = vendor.items ? vendor.items : [];
+
   return (
     <TableRow>
       <TableCell className="pl-0">{vendor.name}</TableCell>
-      <TableCell>{vendor.count}</TableCell>
+      <TableCell>
+        <Popover>
+          <PopoverTrigger>
+            <Button variant="ghost" size="icon" className="" asChild>
+              <div className="space-x-1">
+                <span>{vendor.count}</span>
+                <AiFillInfoCircle className="h-6 w-6 fill-gray-400" />
+              </div>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div>
+              {items.map(item => {
+                const quantity = item.materials.find(m => m.material._id === material).quantity;
+                console.log(item);
+                return (
+                  <Button variant="ghost" key={item._id} asChild>
+                    <Link href={`/list/${item.categories[0].slug}`}>
+                      {item.name} ({quantity})
+                    </Link>
+                  </Button>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
+      </TableCell>
       <TableCell>
         {holding < 1 ? (
           <AlertDialog>
@@ -100,10 +132,12 @@ function Vendor({ vendor, material, holding }) {
 }
 
 export default function Manage(props) {
-  const { id, vendors } = props;
+  console.log(props);
+  const { id, vendors, location, locationNote, name } = props;
 
   const dispatch = useDispatch();
   const holding = useSelector(state => state.holding.find(h => h.id === id)?.count || 0);
+
   return (
     <>
       <div className="text-sm grid items-center grid-rows-1 grid-cols-[auto,auto,1fr] w-full">
@@ -117,6 +151,22 @@ export default function Manage(props) {
         >
           <AiFillPlusCircle className="h-6 w-6 fill-yellow-500" />
         </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="secondary">Locations</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{name}</DialogTitle>
+            </DialogHeader>
+            <div>
+              {location.map(({ map, _key }) => (
+                <Image image={map.asset} key={_key} />
+              ))}
+              <Content>{locationNote}</Content>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <DropdownMenu>
           <DropdownMenuTrigger tabIndex={0} className="justify-self-end">
