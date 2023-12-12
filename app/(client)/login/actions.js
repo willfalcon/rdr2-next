@@ -9,8 +9,10 @@ import { cookies } from 'next/headers';
 export async function login(body) {
   try {
     const user = await getUser(body.email);
+
     if (!user) return { field: 'email', message: 'No user found with that email.' };
     const inputHash = crypto.pbkdf2Sync(body.password, user.salt, 1000, 64, 'sha512').toString('hex');
+
     const passwordsMatch = user.hash === inputHash;
     if (!passwordsMatch) return { field: 'password', message: 'Incorrect password.' };
 

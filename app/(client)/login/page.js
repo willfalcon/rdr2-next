@@ -12,11 +12,15 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { login } from './actions';
 import { useUser } from '@/lib/useUser';
+import Link from 'next/link';
 
 const loginFormSchema = z.object({
-  email: z.string().min(1, {
-    message: 'Email is required.',
-  }),
+  email: z
+    .string()
+    .min(1, {
+      message: 'Email is required.',
+    })
+    .email('Please enter a valid email address'),
   password: z.string().min(1, {
     message: 'Password is required.',
   }),
@@ -41,9 +45,9 @@ export default function Page() {
 
     try {
       const res = await login({ email, password });
+      console.log(res);
       if (res.success) {
-        router.push('/');
-        refetchUser();
+        router.push('/?refetchUser=1');
       }
       if (res.message) {
         form.setError(res.field || 'custom', { type: 'string', message: res.message });
@@ -61,7 +65,7 @@ export default function Page() {
         Login
       </Title>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <FormField
             control={form.control}
             name="email"
@@ -80,7 +84,7 @@ export default function Page() {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="mt-8">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input {...field} type="password" />
@@ -89,8 +93,13 @@ export default function Page() {
               </FormItem>
             )}
           />
-
+          <Link href="/forgot-password" className="block text-sm font-medium text-muted-foreground my-4">
+            Forgot Password
+          </Link>
           <Button type="submit">Login</Button>
+          <Button asChild variant="secondary" className="ml-2">
+            <Link href="/signup"> Sign Up</Link>
+          </Button>
         </form>
       </Form>
     </div>

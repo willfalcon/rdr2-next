@@ -10,7 +10,7 @@ export default function Weapons({ weapons }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {weapons.map(({ weapon, ammo, _key }) => {
+        {weapons?.map(({ weapon, ammo, _key }) => {
           return (
             <TableRow key={_key}>
               <TableCell>{weapon}</TableCell>

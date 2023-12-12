@@ -3,8 +3,9 @@ import Weapons from './Weapons';
 import Manage from './Manage';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { TabsContent } from '@/components/ui/tabs';
+
 export default function Material(props) {
-  const { id, name, type, vendors, mode, weapons } = props;
+  const { id, name, type, vendors, weapons, locations, locationNotes } = props;
 
   const totalNeeded = vendors.reduce((acc, cur) => acc + cur.count, 0);
   const totalGiven = useSelector(state => {
@@ -12,6 +13,7 @@ export default function Material(props) {
     return given?.vendors.reduce((acc, cur) => acc + cur.count, 0) || 0;
   });
   const holding = useSelector(state => state.holding.find(h => h.id === id)?.count || 0);
+
   return (
     <AccordionItem value={id}>
       <AccordionTrigger className="px-4">{`${name} ${type} ${holding + totalGiven} / ${totalNeeded}`}</AccordionTrigger>
@@ -20,7 +22,7 @@ export default function Material(props) {
         <div className="px-4">
           {/* {mode === 'manage' ? <Manage id={id} vendors={vendors} /> : <Weapons weapons={weapons} />} */}
           <TabsContent value="manage">
-            <Manage id={id} vendors={vendors} />
+            <Manage id={id} vendors={vendors} location={locations} locationNote={locationNotes} name={name} />
           </TabsContent>
           <TabsContent value="weapons">
             <Weapons weapons={weapons} />

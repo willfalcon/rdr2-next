@@ -46,9 +46,14 @@ export default function Menu() {
           <DropdownMenuLabel>Hang on, give me a second...</DropdownMenuLabel>
         ) : user ? (
           <>
+            <DropdownMenuLabel>Account</DropdownMenuLabel>
             <DropdownMenuItem asChild>
               <Link href="/profile">Profile</Link>
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/logout">Logout</Link>
+            </DropdownMenuItem>
+            <DropdownMenuLabel>Game</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
                 toast.promise(handleSave(user), {
@@ -71,9 +76,6 @@ export default function Menu() {
             >
               Load
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/logout">Logout</Link>
-            </DropdownMenuItem>
           </>
         ) : (
           <>
@@ -85,15 +87,12 @@ export default function Menu() {
             </DropdownMenuItem>
           </>
         )}
-        <DropdownMenuItem asChild>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              resetState();
-            }}
-          >
-            Reset
-          </Button>
+        <DropdownMenuItem
+          onClick={() => {
+            resetState();
+          }}
+        >
+          Reset
         </DropdownMenuItem>
         {/* </ul> */}
       </DropdownMenuContent>

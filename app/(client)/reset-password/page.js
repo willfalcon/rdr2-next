@@ -1,26 +1,23 @@
 'use client';
 
-import { redirect, useRouter } from 'next/navigation';
-import { signup } from './actions';
-
 import Title from '@/components/Title';
-import { useForm } from 'react-hook-form';
+
+import { useRouter } from 'next/navigation';
+
 import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
+import { resetPassword } from './actions';
 import { useUser } from '@/lib/useUser';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
+import { Loader2 } from 'lucide-react';
 
-const signupFormSchema = z.object({
-  email: z
-    .string()
-    .min(1, {
-      message: 'Email is required.',
-    })
-    .email('Please enter a valid email address'),
+const resetPasswordFormSchema = z.object({
   password: z.string().min(1, {
     message: 'Password is required.',
   }),
@@ -29,72 +26,52 @@ const signupFormSchema = z.object({
   }),
 });
 
-export default function Page() {
-  useUser([], { redirectTo: '/', redirectIfFound: true });
+export default function Page({ searchParams }) {
+  console.log(searchParams);
+  const [user, loading, refetchUser] = useUser([], { redirectTo: '/', redirectIfFound: true });
 
   const form = useForm({
-    resolver: zodResolver(signupFormSchema),
+    resolver: zodResolver(resetPasswordFormSchema),
     defaultValues: {
-      email: '',
       password: '',
       confirmPassword: '',
     },
   });
 
   const router = useRouter();
-
   const { toast } = useToast();
 
-  async function onSubmit(values) {
-    console.log('submitting');
-    const email = values.email.toLowerCase();
-    const password = values.password;
+  async function onSubmit({ password, confirmPassword }) {
     try {
-      const res = await signup({ email, password });
-
+      // check for token in search params
+      const res = await resetPassword({ password, confirmPassword, token: searchParams.token });
+      console.log(res);
       if (res.success) {
-        console.log('success');
         toast({
-          title: 'User created.',
-          description: 'Login with your email.',
+          title: 'Password reset.',
         });
-        router.push('/profile');
+        router.push('/profile?refetchUser=1');
       }
-      if (res.field) {
-        form.setError(res.field, { type: 'string', message: res.message });
-      }
-      if (res.error) {
-        console.log('error');
-        form.setError('custom', { type: 'string', message: res.message });
+      if (res.message) {
+        form.setError(res.field || 'custom', { type: 'string', message: res.message });
       }
     } catch (error) {
       console.error('An unexpected error happened occurred:', error);
+
       form.setError('custom', { type: 'string', message: error.message });
     }
-    console.log('done submitting');
   }
 
-  return (
-    <div className="w-64 max-w-lg mx-auto">
-      <Title h1 className="text-center">
-        Sign Up
-      </Title>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+  const { formState } = form;
 
+  return (
+    <div className="max-w-lg mx-auto">
+      <Title h1 className="text-center">
+        Reset Password
+      </Title>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-64 mx-auto">
           <FormField
             control={form.control}
             name="password"
@@ -108,7 +85,6 @@ export default function Page() {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="confirmPassword"
@@ -122,9 +98,17 @@ export default function Page() {
               </FormItem>
             )}
           />
-
-          <Button type="submit">Sign Up</Button>
-          <Button variant="secondary" asChild className="ml-2">
+          <Button type="submit">
+            {formState.isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Resetting...
+              </>
+            ) : (
+              'Reset Password'
+            )}
+          </Button>
+          <Button asChild variant="secondary" className="ml-2">
             <Link href="/login">Log In</Link>
           </Button>
         </form>

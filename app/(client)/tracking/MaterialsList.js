@@ -13,8 +13,9 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function MaterialsList() {
   const [materials, setMaterials] = useState([]);
-  // const tracking = useSelector(state => state.status.filter(item => item.status === 2).map(item => item.id));
+
   const tracking = useSelector(trackingSelector);
+
   useEffect(() => {
     async function doIt() {
       const items = await getTrackedItems(tracking);
@@ -27,7 +28,14 @@ export default function MaterialsList() {
             materialsList.push({
               ...material,
               id: material._id,
-              vendors: [{ id: item.categories[0].vendor._id, count: quantity, name: item.categories[0].vendor.name }],
+              vendors: [
+                {
+                  id: item.categories[0].vendor._id,
+                  count: quantity,
+                  name: item.categories[0].vendor.name,
+                  items: [item],
+                },
+              ],
             });
           } else {
             const vendorIndex = materialsList[index].vendors.findIndex(vendor => vendor.id === item.categories[0].vendor._id);
@@ -36,9 +44,11 @@ export default function MaterialsList() {
                 id: item.categories[0].vendor._id,
                 count: quantity,
                 name: item.categories[0].vendor.name,
+                items: [item],
               });
             } else {
               materialsList[index].vendors[vendorIndex].count += quantity;
+              materialsList[index].vendors[vendorIndex].items.push(item);
             }
           }
         });
@@ -50,21 +60,18 @@ export default function MaterialsList() {
     }
     doIt();
   }, [tracking]);
-  return (
-    <>
-      <Title>Materials</Title>
 
-      <Tabs defaultValue="manage">
-        <TabsList>
-          <TabsTrigger value="manage">Manage</TabsTrigger>
-          <TabsTrigger value="weapons">Weapons</TabsTrigger>
-        </TabsList>
-        <Accordion className="mb-3" type="single" collapsible>
-          {materials.map(material => {
-            return <Material key={material.id} {...material} />;
-          })}
-        </Accordion>
-      </Tabs>
-    </>
+  return (
+    <Tabs defaultValue="manage">
+      <TabsList className="ml-4">
+        <TabsTrigger value="manage">Manage</TabsTrigger>
+        <TabsTrigger value="weapons">Weapons</TabsTrigger>
+      </TabsList>
+      <Accordion className="mb-3" type="single" collapsible>
+        {materials.map(material => {
+          return <Material key={material.id} {...material} />;
+        })}
+      </Accordion>
+    </Tabs>
   );
 }

@@ -16,11 +16,6 @@ export default defineType({
       type: 'string',
     }),
     defineField({
-      name: 'password',
-      title: 'Password',
-      type: 'string',
-    }),
-    defineField({
       name: 'hash',
       title: 'Hash',
       type: 'string',
@@ -35,5 +30,20 @@ export default defineType({
       title: 'Store',
       type: 'text',
     }),
+    defineField({
+      name: 'resetToken',
+      title: 'Reset Token',
+      type: 'string',
+    }),
+    defineField({
+      name: 'resetTokenExpiry',
+      title: 'Reset Token Expiry',
+      type: 'number',
+    }),
   ],
+  preview: {
+    select: {
+      title: 'email',
+    },
+  },
 });
