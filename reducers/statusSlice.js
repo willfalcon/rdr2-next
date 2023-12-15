@@ -18,9 +18,11 @@ export const statusSlice = createSlice({
       action.payload.forEach(item => {
         state.push(item);
       });
+      return state;
     },
     clearStatus(state) {
       state = [];
+      return state;
     },
   },
 });

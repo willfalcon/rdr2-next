@@ -1,4 +1,5 @@
 import Title from '@/components/Title';
+import TrackingCount from '@/components/TrackingCount';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +24,7 @@ export default async function Home() {
               </Link>
             </CardTitle>
             <CardDescription>
-              <span className="text-gray-500 font-medium text-sm">23 items</span>
+              <TrackingCount />
             </CardDescription>
           </CardHeader>
         </Card>

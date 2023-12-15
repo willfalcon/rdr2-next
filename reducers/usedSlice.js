@@ -30,12 +30,12 @@ const usedSlice = createSlice({
       }
     },
     replaceUsedState(state, action) {
-      action.payload.forEach(item => {
-        state.push(item);
-      });
+      state = action.payload;
+      return state;
     },
     clearUsed(state) {
       state = [];
+      return state;
     },
   },
 });

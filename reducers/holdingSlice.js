@@ -22,12 +22,12 @@ export const holdingSlice = createSlice({
       }
     },
     replaceHoldingState(state, action) {
-      action.payload.forEach(item => {
-        state.push(item);
-      });
+      state = action.payload;
+      return state;
     },
     clearHolding(state) {
       state = [];
+      return state;
     },
   },
 });

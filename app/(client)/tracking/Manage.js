@@ -132,7 +132,6 @@ function Vendor({ vendor, material, holding }) {
 }
 
 export default function Manage(props) {
-  console.log(props);
   const { id, vendors, location, locationNote, name } = props;
 
   const dispatch = useDispatch();
@@ -140,7 +139,7 @@ export default function Manage(props) {
 
   return (
     <>
-      <div className="text-sm grid items-center grid-rows-1 grid-cols-[auto,auto,1fr] w-full">
+      <div className="text-sm grid items-center grid-rows-1 grid-cols-[auto,auto,auto,1fr] w-full">
         <span>Holding: {holding}</span>
         <Button
           variant="ghost"
@@ -151,22 +150,24 @@ export default function Manage(props) {
         >
           <AiFillPlusCircle className="h-6 w-6 fill-yellow-500" />
         </Button>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="secondary">Locations</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{name}</DialogTitle>
-            </DialogHeader>
-            <div>
-              {location.map(({ map, _key }) => (
-                <Image image={map.asset} key={_key} />
-              ))}
-              <Content>{locationNote}</Content>
-            </div>
-          </DialogContent>
-        </Dialog>
+        {(location || locationNote) && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="secondary">Locations</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{name}</DialogTitle>
+              </DialogHeader>
+              <div>
+                {location?.map(({ map, _key }) => (
+                  <Image image={map} key={_key} alt={`Location of ${name}`} />
+                ))}
+                {locationNote && <Content>{locationNote}</Content>}
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger tabIndex={0} className="justify-self-end">

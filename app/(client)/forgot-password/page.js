@@ -37,14 +37,12 @@ export default function Page() {
   });
 
   const { formState } = form;
-  console.log(formState);
 
   async function onSubmit(values) {
     const email = values.email.toLowerCase();
 
     try {
       const res = await sendResetEmail(email);
-      console.log(res);
       if (res && res.message) {
         form.setError(res.field || 'custom', { type: 'string', message: res.message });
       }

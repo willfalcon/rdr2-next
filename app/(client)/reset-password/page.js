@@ -13,9 +13,8 @@ import { Button } from '@/components/ui/button';
 import { resetPassword } from './actions';
 import { useUser } from '@/lib/useUser';
 import Link from 'next/link';
-import { useState } from 'react';
-import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const resetPasswordFormSchema = z.object({
   password: z.string().min(1, {
@@ -27,7 +26,6 @@ const resetPasswordFormSchema = z.object({
 });
 
 export default function Page({ searchParams }) {
-  console.log(searchParams);
   const [user, loading, refetchUser] = useUser([], { redirectTo: '/', redirectIfFound: true });
 
   const form = useForm({
@@ -39,17 +37,14 @@ export default function Page({ searchParams }) {
   });
 
   const router = useRouter();
-  const { toast } = useToast();
 
   async function onSubmit({ password, confirmPassword }) {
     try {
       // check for token in search params
       const res = await resetPassword({ password, confirmPassword, token: searchParams.token });
-      console.log(res);
+
       if (res.success) {
-        toast({
-          title: 'Password reset.',
-        });
+        toast.success('Password reset.');
         router.push('/profile?refetchUser=1');
       }
       if (res.message) {

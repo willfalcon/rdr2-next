@@ -45,7 +45,7 @@ export default function Page() {
 
     try {
       const res = await login({ email, password });
-      console.log(res);
+
       if (res.success) {
         router.push('/?refetchUser=1');
       }

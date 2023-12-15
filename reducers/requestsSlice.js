@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { AccessibilityIcon } from 'lucide-react';
 
 export const requestsSlice = createSlice({
   name: 'requests',
@@ -14,11 +15,16 @@ export const requestsSlice = createSlice({
         state[index].state = newState;
       }
     },
+    replaceRequestsState(state, action) {
+      state = action.payload;
+      return state;
+    },
     clearRequests(state) {
       state = [];
+      return state;
     },
   },
 });
 
 export default requestsSlice.reducer;
-export const { changeRequestState, clearRequests } = requestsSlice.actions;
+export const { changeRequestState, replaceRequestsState, clearRequests } = requestsSlice.actions;

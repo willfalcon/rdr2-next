@@ -7,7 +7,6 @@ export default function Users() {
     <button
       onClick={async () => {
         const res = await deleteUsers();
-        console.log(res);
       }}
       className="btn"
     >

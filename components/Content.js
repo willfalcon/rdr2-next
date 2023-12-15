@@ -19,7 +19,7 @@ export default function Content({ children }) {
           types: {
             image: ({ value: { asset } }) => {
               if (!size.width) return null;
-              console.log(size);
+
               const width = size.width;
               const aspect = asset.metadata.dimensions.aspectRatio;
               // w / h = a
@@ -32,6 +32,7 @@ export default function Content({ children }) {
                   height={height}
                   placeholder="blur"
                   blurDataURL={asset.metadata.lqip}
+                  alt=""
                 />
               );
             },

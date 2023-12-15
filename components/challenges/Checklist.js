@@ -5,10 +5,8 @@ import { toggleItem } from '@/reducers/challengesSlice';
 
 export default function Checklist({ list, challenge }) {
   const checkedItems = useSelector(state => state.challenges.tasks.find(task => task.id === challenge)?.checked || []);
-  const test = useSelector(state => state.challenges);
-  console.log(test);
+
   const dispatch = useDispatch();
-  console.log(checkedItems);
 
   return (
     <div>
@@ -17,7 +15,7 @@ export default function Checklist({ list, challenge }) {
       <div>
         {list.map(item => {
           const checked = checkedItems.indexOf(item) >= 0;
-          console.log(checked);
+
           return (
             <div className="flex items-center space-x-2 my-2" key={item}>
               <Checkbox

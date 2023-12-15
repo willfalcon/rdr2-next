@@ -11,7 +11,7 @@ import { Button } from './ui/button';
 export default function Menu() {
   const location = typeof window !== 'undefined' ? window?.location?.pathname : '';
   const [user, loading] = useUser([location]);
-  // console.log(user);
+
   const initials = user?.name
     ? user.name
         .split(' ')

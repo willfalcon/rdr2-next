@@ -11,7 +11,7 @@ export async function signup(data) {
 
   // check if email is already registered
   const existing = await authClient.fetch(groq`*[_type == 'user' && email == $email][0]`, { email });
-  console.log(existing);
+
   if (existing) {
     return {
       field: 'email',

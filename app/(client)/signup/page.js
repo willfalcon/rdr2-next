@@ -10,9 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
 import { useUser } from '@/lib/useUser';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 const signupFormSchema = z.object({
   email: z
@@ -43,21 +43,14 @@ export default function Page() {
 
   const router = useRouter();
 
-  const { toast } = useToast();
-
   async function onSubmit(values) {
-    console.log('submitting');
     const email = values.email.toLowerCase();
     const password = values.password;
     try {
       const res = await signup({ email, password });
 
       if (res.success) {
-        console.log('success');
-        toast({
-          title: 'User created.',
-          description: 'Login with your email.',
-        });
+        toast.success('User created. Login with your email.');
         router.push('/profile');
       }
       if (res.field) {
@@ -71,7 +64,6 @@ export default function Page() {
       console.error('An unexpected error happened occurred:', error);
       form.setError('custom', { type: 'string', message: error.message });
     }
-    console.log('done submitting');
   }
 
   return (

@@ -17,7 +17,7 @@ export default function ItemsList() {
       const trackedItems = await getTrackedItems(tracking);
 
       trackedItems.sort(alphabetical);
-      // console.log(trackedItems);
+
       setItems(trackedItems);
     }
     callGetItems();

@@ -19,10 +19,6 @@ export default function ChallengeType(props) {
 
   const challenge = challenges.find(ch => ch.rank === rank);
 
-  // if (name === 'Bandit') {
-  //   console.log(challenge);
-  // }
-
   return (
     <AccordionItem value={_id}>
       <AccordionTrigger>

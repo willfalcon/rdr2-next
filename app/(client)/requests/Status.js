@@ -37,9 +37,9 @@ export default function Status({ _id }) {
   const status = useSelector(state => state.requests.find(i => i.id === _id)?.state);
   return (
     <>
-      <div className="join my-6">
+      <div className="flex my-6">
         <button
-          className={classNames('join-item rounded-l-full btn', btnClass(status))}
+          className={classNames('rounded-l-full btn p-2', btnClass(status))}
           onClick={() => {
             const newStatus = !status ? 1 : status <= 1 ? 1 : status - 1;
             dispatch(changeRequestState({ item: _id, state: newStatus }));
@@ -47,9 +47,9 @@ export default function Status({ _id }) {
         >
           <AiFillCaretLeft />
         </button>
-        <div className={classNames('join-item btn', btnClass(status))}>{statusText(status)}</div>
+        <div className={classNames('p-2', btnClass(status))}>{statusText(status)}</div>
         <button
-          className={classNames('join-item rounded-r-full btn', btnClass(status))}
+          className={classNames('rounded-r-full btn p-2', btnClass(status))}
           onClick={() => {
             const newStatus = !status ? 2 : status >= 4 ? 4 : status + 1;
             dispatch(changeRequestState({ item: _id, state: newStatus }));

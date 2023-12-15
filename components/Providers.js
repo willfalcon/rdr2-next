@@ -6,6 +6,10 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import debounce from '@/lib/debounce';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { getCookie } from '@/lib/utils';
+import handleSave from '@/lib/handleSave';
+import { useUser } from '@/lib/useUser';
+
+import toast from 'react-hot-toast';
 
 export default function Providers({ children, ...props }) {
   useEffect(() => {
@@ -19,6 +23,24 @@ export default function Providers({ children, ...props }) {
 
     return () => unsubscribe();
   }, []);
+
+  const user = useUser();
+
+  useEffect(() => {
+    const unsubscribe = user
+      ? store.subscribe(
+          debounce(() => {
+            toast.promise(handleSave(user), {
+              loading: 'Saving...',
+              success: <p>Successfully saved!</p>,
+              error: <p>Something went wrong</p>,
+            });
+          }, 5000)
+        )
+      : () => null;
+
+    return () => unsubscribe();
+  }, [user]);
 
   return (
     <Provider store={store}>

@@ -34,12 +34,12 @@ const givenSlice = createSlice({
       }
     },
     replaceGivenState(state, action) {
-      action.payload.forEach(item => {
-        state.push(item);
-      });
+      state = action.payload;
+      return state;
     },
     clearGiven(state) {
       state = [];
+      return state;
     },
   },
 });

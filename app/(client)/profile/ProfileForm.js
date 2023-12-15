@@ -7,8 +7,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+
+import toast from 'react-hot-toast';
 
 const profileFormSchema = z.object({
   name: z.string(),
@@ -26,7 +27,6 @@ export default function ProfileForm({ user }) {
     },
   });
 
-  const { toast } = useToast();
   const router = useRouter();
   async function onSubmit(values) {
     const name = values.name ? values.name : null;
@@ -36,9 +36,7 @@ export default function ProfileForm({ user }) {
     try {
       const res = await updateUser({ name, password, confirmPassword, user });
       if (res.success) {
-        toast({
-          title: 'User updated.',
-        });
+        toast.success('User updated.');
         router.push('/profile');
       }
       if (res.field) {

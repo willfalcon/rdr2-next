@@ -18,7 +18,6 @@ export async function sendResetEmail(email) {
     const resetToken = (await promisify(randomBytes)(20)).toString('hex');
     const resetTokenExpiry = Date.now() + 1800; // 30 minutes
     const userWithReset = await authClient.patch(user._id).set({ resetToken, resetTokenExpiry }).commit();
-    console.log(userWithReset);
 
     // 3. email them that reset token
     resend.emails.send({
