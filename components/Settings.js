@@ -5,9 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenuTrigger } from './ui/navigation-menu';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Switch } from './ui/switch';
+import { Label } from './ui/label';
 
 export default function Settings() {
   const hideCompleted = useSelector(state => state.settings.hideCompleted);
+  const autoSave = useSelector(state => state.settings.autoSave);
 
   const dispatch = useDispatch();
   return (
@@ -19,18 +22,25 @@ export default function Settings() {
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
         </DialogHeader>
-        <div className="form-control">
-          <label className="cursor-pointer label">
-            <span className="label-text">Hide Completed</span>
-            <input
-              type="checkbox"
-              className="toggle"
-              checked={hideCompleted}
-              onChange={() => {
-                dispatch(changeSetting({ setting: 'hideCompleted', value: !hideCompleted }));
-              }}
-            />
-          </label>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="hide-completed"
+            checked={hideCompleted}
+            onCheckedChange={value => {
+              dispatch(changeSetting({ setting: 'hideCompleted', value }));
+            }}
+          />
+          <Label htmlFor="hide-completed">Hide Completed</Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="auto-save"
+            checked={autoSave}
+            onCheckedChange={value => {
+              dispatch(changeSetting({ setting: 'autoSave', value }));
+            }}
+          />
+          <Label htmlFor="auto-save">Auto Save</Label>
         </div>
       </DialogContent>
     </Dialog>

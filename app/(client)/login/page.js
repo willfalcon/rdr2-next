@@ -47,7 +47,7 @@ export default function Page() {
       const res = await login({ email, password });
 
       if (res.success) {
-        router.push('/?refetchUser=1');
+        router.push('/?refetchUser=1&loggedIn=true');
       }
       if (res.message) {
         form.setError(res.field || 'custom', { type: 'string', message: res.message });

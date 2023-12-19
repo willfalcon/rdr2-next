@@ -4,6 +4,7 @@ export const settingsSlice = createSlice({
   name: 'settings',
   initialState: {
     hideCompleted: false,
+    autoSave: false,
   },
   reducers: {
     changeSetting(state, action) {

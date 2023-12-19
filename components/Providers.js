@@ -1,6 +1,6 @@
 'use client';
 
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import store, { saveState } from '@/lib/store';
 import { createContext, useContext, useEffect, useState } from 'react';
 import debounce from '@/lib/debounce';
@@ -24,38 +24,35 @@ export default function Providers({ children, ...props }) {
     return () => unsubscribe();
   }, []);
 
-  const user = useUser();
-
-  useEffect(() => {
-    const unsubscribe = user
-      ? store.subscribe(
-          debounce(() => {
-            toast.promise(handleSave(user), {
-              loading: 'Saving...',
-              success: <p>Successfully saved!</p>,
-              error: <p>Something went wrong</p>,
-            });
-          }, 5000)
-        )
-      : () => null;
-
-    return () => unsubscribe();
-  }, [user]);
-
   return (
     <Provider store={store}>
-      <AuthProvider>
+      <AutoSave>
         <NextThemesProvider {...props}>{children}</NextThemesProvider>
-      </AuthProvider>
+      </AutoSave>
     </Provider>
   );
 }
 
-const AuthContext = createContext();
-const useAuth = () => useContext(AuthContext);
+function AutoSave({ children }) {
+  const user = useUser();
+  const autoSave = useSelector(state => state.settings.autoSave);
 
-export { useAuth };
+  useEffect(() => {
+    const unsubscribe =
+      user && autoSave
+        ? store.subscribe(
+            debounce(() => {
+              toast.promise(handleSave(user), {
+                loading: 'Saving...',
+                success: <p>Successfully saved!</p>,
+                error: <p>Something went wrong</p>,
+              });
+            }, 5000)
+          )
+        : () => null;
 
-function AuthProvider({ children }) {
-  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
+    return () => unsubscribe();
+  }, [user, autoSave]);
+
+  return <>{children}</>;
 }

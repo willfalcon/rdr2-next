@@ -1,5 +1,4 @@
 import Title from '@/components/Title';
-import TrackingCount from '@/components/TrackingCount';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,7 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { getVendorLists } from '@/lib/fetching';
 import Link from 'next/link';
 
-import { Fragment } from 'react';
+// import TrackingCount from '@/components/TrackingCount';
+const TrackingCount = dynamic(() => import('@/components/TrackingCount'), { ssr: false });
+import { Fragment, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 
 export default async function Home() {
   const vendors = await getVendorLists();

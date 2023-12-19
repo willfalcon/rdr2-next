@@ -4,7 +4,6 @@ import Title from '@/components/Title';
 import { useUser } from '@/lib/useUser';
 
 import ProfileForm from './ProfileForm';
-import { useState } from 'react';
 
 export default function Page() {
   const [user, loading, refetchUser] = useUser([], { redirectTo: '/login' });
